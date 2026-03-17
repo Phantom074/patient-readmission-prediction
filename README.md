@@ -114,7 +114,7 @@ patient-readmission-prediction/
 
 </div>
 
-**Download from Kaggle →** [Indian Patient Readmission Risk Dataset](https://www.kaggle.com/datasets/phantom074)
+**Download from Kaggle →** [Indian Patient Readmission Risk Dataset](https://www.kaggle.com/datasets/mukuldhattarwal)
 
 ---
 

@@ -1,63 +1,96 @@
-# Patient Readmission Risk Prediction & Health Analytics Platform
+<div align="center">
 
-An end-to-end Data Science project that predicts whether a hospital patient will be readmitted within 30 days of discharge — and explains why — so hospitals can intervene before readmission happens.
+# 🏥 Patient Readmission Risk Prediction
+### *Predicting 30-day hospital readmission risk for Indian patients*
 
-![Python](https://img.shields.io/badge/Python-3.14+-blue?logo=python)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql)
-![XGBoost](https://img.shields.io/badge/XGBoost-2.0-red)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-FF4B4B?logo=streamlit)
-![PowerBI](https://img.shields.io/badge/PowerBI-Dashboard-F2C811?logo=powerbi)
-![Kaggle](https://img.shields.io/badge/Dataset-Kaggle-20BEFF?logo=kaggle)
-![Status](https://img.shields.io/badge/Status-In%20Progress-yellow)
+![Python](https://img.shields.io/badge/Python-3.14+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=for-the-badge&logo=postgresql&logoColor=white)
+![XGBoost](https://img.shields.io/badge/XGBoost-2.0-AA0000?style=for-the-badge)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.30+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![PowerBI](https://img.shields.io/badge/Power_BI-Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
+![Kaggle](https://img.shields.io/badge/Dataset-Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)
 
----
+![Status](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat-square)
+![Records](https://img.shields.io/badge/Patients-10%2C000-blue?style=flat-square)
+![States](https://img.shields.io/badge/Indian%20States-14-orange?style=flat-square)
+![Readmission](https://img.shields.io/badge/Readmission%20Rate-32%25-red?style=flat-square)
 
-## Overview
-
-Unnecessary hospital readmissions cost healthcare systems crores annually and indicate gaps in patient care. This project builds a system that:
-
-- Predicts which patients are likely to be readmitted within 30 days of discharge
-- Explains WHY a patient is at risk using SHAP values
-- Gives doctors actionable recommendations before discharge
-- Provides hospital management a live analytics dashboard
-
-**Dataset:** Synthetic Indian Patient Readmission Dataset (10,000 records)
-**Kaggle:** [Indian Patient Readmission Risk Dataset](https://www.kaggle.com/datasets/phantom074)
-**Target Variable:** `readmitted_30_days` (0 = No, 1 = Yes)
-**Readmission Rate:** ~32%
+</div>
 
 ---
 
-## Project Structure
+## 📌 The Problem
+
+Every year, thousands of patients are readmitted to hospitals within 30 days of discharge.
+Each readmission means:
+
+- 💸 Additional cost burden on patients and hospitals
+- ⚠️ A gap in the quality of care provided
+- 🔁 A missed opportunity to intervene before discharge
+
+**This project builds a clinical decision support system that identifies high-risk patients before they leave the hospital — so doctors can act in time.**
+
+---
+
+## 🎯 What It Does
+
+```
+Patient Details Entered
+        ↓
+Clinical Risk Scoring (XGBoost + SHAP)
+        ↓
+┌───────────────────────────────────────┐
+│  Readmission Probability: 73%         │
+│  Risk Level: 🔴 High                  │
+│                                       │
+│  Key Risk Factors:                    │
+│  ⚠️  Heart Failure diagnosis          │
+│  ⚠️  Discharged without follow-up    │
+│  ⚠️  4 previous admissions           │
+│                                       │
+│  Recommendation:                      │
+│  Schedule follow-up within 7 days    │
+└───────────────────────────────────────┘
+```
+
+---
+
+## 📁 Project Structure
 
 ```
 patient-readmission-prediction/
-├── app/
-│   └── streamlit_app.py                  # Live prediction web app
-├── data/
+│
+├── 📂 app/
+│   └── streamlit_app.py              # Live clinical prediction app
+│
+├── 📂 data/
 │   ├── raw/
-│   │   └── indian_patient_data.csv       # Main dataset (10,000 records)
-│   └── processed/                        # Cleaned & engineered data
-├── src/
-│   ├── preprocess.py                     # Data cleaning functions
-│   ├── features.py                       # Feature engineering pipeline
-│   ├── train.py                          # Model training (LR → RF → XGBoost)
-│   └── predict.py                        # Inference & SHAP explanation
-├── notebooks/
-│   ├── 01_eda.ipynb                      # Exploratory Data Analysis
-│   ├── 02_feature_engineering.ipynb      # Feature creation walkthrough
-│   ├── 03_model_building.ipynb           # Model training & evaluation
-│   └── 04_shap_explainability.ipynb      # SHAP feature importance
-├── sql/
-│   ├── schema.sql                        # PostgreSQL table definitions
-│   ├── readmission_analysis.sql          # Readmission cohort queries
-│   └── patient_kpis.sql                  # Business KPI queries
-├── models/                               # Trained model files (.pkl)
-├── dashboard/
-│   └── readmission_dashboard.pbix        # Power BI dashboard
-├── reports/                              # EDA charts & model reports
-├── data_generation/
-│   └── generate_indian_patient_data.py   # Synthetic data generator
+│   │   └── indian_patient_data.csv   # 10,000 Indian patient records
+│   └── processed/                    # Cleaned & engineered data
+│
+├── 📂 src/
+│   ├── preprocess.py                 # Data cleaning pipeline
+│   ├── features.py                   # Clinical feature engineering
+│   ├── train.py                      # Model training (LR → RF → XGBoost)
+│   └── predict.py                    # Inference & SHAP explanation
+│
+├── 📂 notebooks/
+│   ├── 01_eda.ipynb                  # Exploratory Data Analysis
+│   ├── 02_feature_engineering.ipynb  # Feature creation
+│   ├── 03_model_building.ipynb       # Training & evaluation
+│   └── 04_shap_explainability.ipynb  # Clinical explainability
+│
+├── 📂 sql/
+│   ├── schema.sql                    # PostgreSQL schema
+│   ├── readmission_analysis.sql      # Cohort queries
+│   └── patient_kpis.sql              # Hospital KPI queries
+│
+├── 📂 models/                        # Saved model files (.pkl)
+├── 📂 dashboard/                     # Power BI dashboard (.pbix)
+├── 📂 reports/                       # EDA charts & reports
+├── 📂 data_generation/
+│   └── generate_indian_patient_data.py
+│
 ├── requirements.txt
 ├── config.yaml
 └── README.md
@@ -65,51 +98,106 @@ patient-readmission-prediction/
 
 ---
 
-## Dataset
+## 🗄️ Dataset
+
+<div align="center">
 
 | Detail | Value |
-|---|---|
-| Total Records | 10,000 patients |
-| Total Features | 23 columns |
-| States Covered | 14 Indian states |
-| Diseases | 15 Indian diagnoses |
-| Date Range | 2020–2024 |
-| Target | readmitted_30_days |
+|:---|:---|
+| 🏥 Total Patients | 10,000 |
+| 📊 Total Features | 23 columns |
+| 🗺️ States Covered | 14 Indian states |
+| 🩺 Diseases | 15 Indian diagnoses |
+| 📅 Date Range | 2020 – 2024 |
+| 🎯 Target Variable | readmitted_30_days |
+| ⚖️ Class Distribution | 68% No · 32% Yes |
 
-**Download from Kaggle:**
-```
-https://www.kaggle.com/datasets/phantom074/indian-patient-readmission-risk
-```
+</div>
+
+**Download from Kaggle →** [Indian Patient Readmission Risk Dataset](https://www.kaggle.com/datasets/phantom074)
 
 ---
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-| Category | Tools |
-|---|---|
+<div align="center">
+
+| Layer | Tools |
+|:---|:---|
 | Language | Python 3.14+ |
 | Database | PostgreSQL 15 |
-| Data Processing | Pandas 2.2+, NumPy |
-| Visualization | Matplotlib, Seaborn, Plotly |
-| Machine Learning | Scikit-learn 1.4+, XGBoost 2.0+ |
-| Explainability | SHAP 0.44+ |
-| Web App | Streamlit 1.30+ |
+| Data Processing | Pandas · NumPy · SciPy |
+| Visualization | Matplotlib · Seaborn · Plotly |
+| Machine Learning | Scikit-learn · XGBoost · SMOTE |
+| Explainability | SHAP |
+| Web App | Streamlit |
 | Dashboard | Power BI |
+| Version Control | Git · GitHub |
+
+</div>
 
 ---
 
-## Key Business Insights
+## 🔬 Clinical Features Engineered
 
-1. Chronic Kidney Disease patients have the highest readmission rate at **46.7%**
-2. COPD and Heart Failure patients follow at **44–43%**
-3. Patients discharged **without follow-up care** readmit significantly more
-4. Short hospital stays of **1–2 days** for serious conditions increase risk
-5. High HbA1c above **9** in diabetic patients strongly predicts readmission
-6. Patients with **4+ previous admissions** are at critical risk
+```python
+features = {
+    "is_senior"              : "Age ≥ 65 flag",
+    "is_short_stay"          : "Length of stay ≤ 2 days",
+    "is_high_medications"    : "10+ medications prescribed",
+    "is_repeat_patient"      : "2+ previous admissions",
+    "poor_diabetes_control"  : "HbA1c > 9 in diabetic patients",
+    "high_creatinine"        : "Creatinine > 1.5 (kidney risk)",
+    "low_haemoglobin"        : "Haemoglobin < 10 (anaemia risk)",
+    "no_followup"            : "Discharged home without follow-up",
+    "ama_discharge"          : "Discharged against medical advice",
+    "risk_score"             : "Composite clinical risk score"
+}
+```
 
 ---
 
-## Getting Started
+## 📊 Key Clinical Insights
+
+> 🔴 **Chronic Kidney Disease** — 46.7% readmission rate (highest)
+
+> 🔴 **COPD & Heart Failure** — 44–43% readmission rate
+
+> ⚠️ **Short stays (1–2 days)** for serious conditions increase risk significantly
+
+> ⚠️ **HbA1c > 9** in diabetic patients is a strong readmission predictor
+
+> ⚠️ **4+ previous admissions** — critical risk segment
+
+> ⚠️ **Discharge without follow-up** — significantly higher readmission vs follow-up care
+
+---
+
+## 🤖 ML Pipeline
+
+```
+Raw Data
+   ↓
+Cleaning & Preprocessing
+   ↓
+Clinical Feature Engineering (15 new features)
+   ↓
+SMOTE — Handle Class Imbalance
+   ↓
+┌─────────────────────────────────────┐
+│  Logistic Regression  →  Baseline  │
+│  Random Forest        →  Better    │
+│  XGBoost              →  Best ✅   │
+└─────────────────────────────────────┘
+   ↓
+SHAP Explainability
+   ↓
+Streamlit Deployment
+```
+
+---
+
+## 🚀 Getting Started
 
 ```bash
 # 1. Clone the repo
@@ -119,26 +207,20 @@ cd patient-readmission-prediction
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Generate dataset locally
+# 3. Generate dataset
 python data_generation/generate_indian_patient_data.py
 
-# OR download directly from Kaggle
-# https://www.kaggle.com/datasets/phantom074
-
-# 4. Launch Streamlit app
-streamlit run app/streamlit_app.py
-# Access at: http://localhost:8501
-```
-
-**To set up PostgreSQL (optional):**
-```bash
+# 4. Set up PostgreSQL (optional)
 createdb readmission_db
 psql -d readmission_db -f sql/schema.sql
+
+# 5. Launch the app
+streamlit run app/streamlit_app.py
 ```
 
 ---
 
-## Roadmap
+## 🗺️ Roadmap
 
 - [x] Synthetic Indian patient dataset (10,000 records)
 - [x] Dataset published on Kaggle
@@ -146,20 +228,27 @@ psql -d readmission_db -f sql/schema.sql
 - [x] Project structure & documentation
 - [ ] EDA notebooks with full visualizations
 - [ ] Feature engineering pipeline
-- [ ] XGBoost model training
-- [ ] SHAP explainability
+- [ ] XGBoost model training & evaluation
+- [ ] SHAP explainability charts
 - [ ] Streamlit prediction app
 - [ ] Power BI dashboard
 - [ ] Deploy on Streamlit Cloud
 
 ---
 
-## Author
+## 👤 Author
+
+<div align="center">
 
 **Mukul**
 Data Science Enthusiast
-[GitHub](https://github.com/phantom074) | [Kaggle](https://www.kaggle.com/phantom074)
+
+[![GitHub](https://img.shields.io/badge/GitHub-phantom074-181717?style=flat-square&logo=github)](https://github.com/phantom074)
+[![Kaggle](https://img.shields.io/badge/Kaggle-phantom074-20BEFF?style=flat-square&logo=kaggle)](https://www.kaggle.com/phantom074)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Mukul-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/mukuldhattarwal)
 
 ---
 
-⭐ If you found this useful, consider giving it a star!
+*⭐ If you found this useful, consider giving it a star!*
+
+</div>

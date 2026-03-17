@@ -35,21 +35,21 @@ Each readmission means:
 ## 🎯 What It Does
 
 ```
-Patient Details Entered
-        ↓
-Clinical Risk Scoring (XGBoost + SHAP)
-        ↓
+      Patient Details Entered
+                  ↓
+ Clinical Risk Scoring (XGBoost + SHAP)
+                  ↓
 ┌───────────────────────────────────────┐
-│  Readmission Probability: 73%         │
-│  Risk Level: 🔴 High                  │
-│                                       │
-│  Key Risk Factors:                    │
-│  ⚠️  Heart Failure diagnosis          │
-│  ⚠️  Discharged without follow-up    │
-│  ⚠️  4 previous admissions           │
-│                                       │
-│  Recommendation:                      │
-│  Schedule follow-up within 7 days    │
+   Readmission Probability: 73%         
+   Risk Level: 🔴 High                  
+                                       
+   Key Risk Factors:                    
+   ⚠️  Heart Failure diagnosis          
+   ⚠️  Discharged without follow-up    
+   ⚠️  4 previous admissions           
+                                       
+   Recommendation:                      
+   Schedule follow-up within 7 days    
 └───────────────────────────────────────┘
 ```
 
@@ -114,7 +114,7 @@ patient-readmission-prediction/
 
 </div>
 
-**Download from Kaggle →** [Indian Patient Readmission Risk Dataset](https://www.kaggle.com/datasets/phantom074)
+**Download from Kaggle →** [Indian Patient Readmission Risk Dataset](https://www.kaggle.com/datasets/mukuldhattarwal)
 
 ---
 
@@ -176,23 +176,23 @@ features = {
 ## 🤖 ML Pipeline
 
 ```
-Raw Data
-   ↓
-Cleaning & Preprocessing
-   ↓
+             Raw Data
+                 ↓
+      Cleaning & Preprocessing
+                 ↓
 Clinical Feature Engineering (15 new features)
-   ↓
-SMOTE — Handle Class Imbalance
-   ↓
+                 ↓
+    SMOTE — Handle Class Imbalance
+                 ↓
 ┌─────────────────────────────────────┐
-│  Logistic Regression  →  Baseline  │
-│  Random Forest        →  Better    │
-│  XGBoost              →  Best ✅   │
+   Logistic Regression  →  Baseline  
+   Random Forest        →  Better    
+   XGBoost              →  Best ✅   
 └─────────────────────────────────────┘
-   ↓
-SHAP Explainability
-   ↓
-Streamlit Deployment
+                 ↓
+       SHAP Explainability
+                 ↓
+        Streamlit Deployment
 ```
 
 ---
@@ -244,7 +244,7 @@ streamlit run app/streamlit_app.py
 Data Science Enthusiast
 
 [![GitHub](https://img.shields.io/badge/GitHub-phantom074-181717?style=flat-square&logo=github)](https://github.com/phantom074)
-[![Kaggle](https://img.shields.io/badge/Kaggle-phantom074-20BEFF?style=flat-square&logo=kaggle)](https://www.kaggle.com/phantom074)
+[![Kaggle](https://img.shields.io/badge/Kaggle-mukuldhattarwal-20BEFF?style=flat-square&logo=kaggle)](https://www.kaggle.com/mukuldhattarwal)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Mukul-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/mukuldhattarwal)
 
 ---

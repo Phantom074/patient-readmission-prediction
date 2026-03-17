@@ -244,7 +244,7 @@ streamlit run app/streamlit_app.py
 Data Science Enthusiast
 
 [![GitHub](https://img.shields.io/badge/GitHub-phantom074-181717?style=flat-square&logo=github)](https://github.com/phantom074)
-[![Kaggle](https://img.shields.io/badge/Kaggle-phantom074-20BEFF?style=flat-square&logo=kaggle)](https://www.kaggle.com/phantom074)
+[![Kaggle](https://img.shields.io/badge/Kaggle-phantom074-20BEFF?style=flat-square&logo=kaggle)](https://www.kaggle.com/mukuldhattarwal)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Mukul-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/mukuldhattarwal)
 
 ---

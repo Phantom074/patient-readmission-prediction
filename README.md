@@ -176,23 +176,23 @@ features = {
 ## 🤖 ML Pipeline
 
 ```
-Raw Data
-   ↓
-Cleaning & Preprocessing
-   ↓
+             Raw Data
+                 ↓
+      Cleaning & Preprocessing
+                 ↓
 Clinical Feature Engineering (15 new features)
-   ↓
-SMOTE — Handle Class Imbalance
-   ↓
+                 ↓
+    SMOTE — Handle Class Imbalance
+                 ↓
 ┌─────────────────────────────────────┐
-│  Logistic Regression  →  Baseline  │
-│  Random Forest        →  Better    │
-│  XGBoost              →  Best ✅   │
+   Logistic Regression  →  Baseline  
+   Random Forest        →  Better    
+   XGBoost              →  Best ✅   
 └─────────────────────────────────────┘
-   ↓
-SHAP Explainability
-   ↓
-Streamlit Deployment
+                 ↓
+       SHAP Explainability
+                 ↓
+        Streamlit Deployment
 ```
 
 ---

@@ -40,16 +40,16 @@ Each readmission means:
  Clinical Risk Scoring (XGBoost + SHAP)
                   ↓
 ┌───────────────────────────────────────┐
-   Readmission Probability: 73%         
-   Risk Level: 🔴 High                  
-                                       
-   Key Risk Factors:                    
-   ⚠️  Heart Failure diagnosis          
-   ⚠️  Discharged without follow-up    
-   ⚠️  4 previous admissions           
-                                       
-   Recommendation:                      
-   Schedule follow-up within 7 days    
+   Readmission Probability: 73%
+   Risk Level: 🔴 High
+
+   Key Risk Factors:
+   ⚠️  Heart Failure diagnosis
+   ⚠️  Discharged without follow-up
+   ⚠️  4 previous admissions
+
+   Recommendation:
+   Schedule follow-up within 7 days
 └───────────────────────────────────────┘
 ```
 
@@ -61,7 +61,7 @@ Each readmission means:
 patient-readmission-prediction/
 │
 ├── 📂 app/
-│   └── streamlit_app.py              # Live clinical prediction app
+│   └── streamlit_app.py              # Live clinical prediction app ✅
 │
 ├── 📂 data/
 │   ├── raw/
@@ -173,6 +173,22 @@ features = {
 
 ---
 
+## 🌐 Streamlit App
+
+A live clinical decision support web app where doctors can enter patient details and instantly get:
+
+- Readmission probability (%)
+- Risk level — 🔴 High / 🟡 Medium / 🟢 Low
+- Key risk factors driving the prediction
+- Clinical recommendation for the care team
+
+```bash
+streamlit run app/streamlit_app.py
+# Access at: http://localhost:8501
+```
+
+---
+
 ## 🤖 ML Pipeline
 
 ```
@@ -185,9 +201,9 @@ Clinical Feature Engineering (15 new features)
     SMOTE — Handle Class Imbalance
                  ↓
 ┌─────────────────────────────────────┐
-   Logistic Regression  →  Baseline  
-   Random Forest        →  Better    
-   XGBoost              →  Best ✅   
+   Logistic Regression  →  Baseline
+   Random Forest        →  Better
+   XGBoost              →  Best ✅
 └─────────────────────────────────────┘
                  ↓
        SHAP Explainability

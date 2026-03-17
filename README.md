@@ -35,10 +35,10 @@ Each readmission means:
 ## 🎯 What It Does
 
 ```
-Patient Details Entered
-        ↓
-Clinical Risk Scoring (XGBoost + SHAP)
-        ↓
+      Patient Details Entered
+                  ↓
+ Clinical Risk Scoring (XGBoost + SHAP)
+                  ↓
 ┌───────────────────────────────────────┐
    Readmission Probability: 73%         
    Risk Level: 🔴 High                  

@@ -40,16 +40,16 @@ Patient Details Entered
 Clinical Risk Scoring (XGBoost + SHAP)
         ↓
 ┌───────────────────────────────────────┐
-│  Readmission Probability: 73%         │
-│  Risk Level: 🔴 High                  │
-│                                       │
-│  Key Risk Factors:                    │
-│  ⚠️  Heart Failure diagnosis          │
-│  ⚠️  Discharged without follow-up    │
-│  ⚠️  4 previous admissions           │
-│                                       │
-│  Recommendation:                      │
-│  Schedule follow-up within 7 days    │
+   Readmission Probability: 73%         
+   Risk Level: 🔴 High                  
+                                       
+   Key Risk Factors:                    
+   ⚠️  Heart Failure diagnosis          
+   ⚠️  Discharged without follow-up    
+   ⚠️  4 previous admissions           
+                                       
+   Recommendation:                      
+   Schedule follow-up within 7 days    
 └───────────────────────────────────────┘
 ```
 

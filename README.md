@@ -226,11 +226,11 @@ streamlit run app/streamlit_app.py
 - [x] Dataset published on Kaggle
 - [x] Data generation script
 - [x] Project structure & documentation
+- [x] Streamlit prediction app
 - [ ] EDA notebooks with full visualizations
 - [ ] Feature engineering pipeline
 - [ ] XGBoost model training & evaluation
 - [ ] SHAP explainability charts
-- [ ] Streamlit prediction app
 - [ ] Power BI dashboard
 - [ ] Deploy on Streamlit Cloud
 

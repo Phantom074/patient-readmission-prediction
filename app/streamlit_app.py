@@ -2,12 +2,17 @@
 streamlit_app.py
 ================
 Patient Readmission Risk Prediction Web App
+Connected to trained XGBoost model + SHAP explainability
 Author: Mukul (github.com/phantom074)
 Run: streamlit run app/streamlit_app.py
 """
 
 import streamlit as st
 import numpy as np
+import pandas as pd
+import joblib
+import os
+import shap
 
 st.set_page_config(
     page_title="MedRisk — Readmission Predictor",
@@ -48,7 +53,7 @@ html, body, [class*="css"] {
 [data-testid="stStatusWidget"] { display: none !important; }
 
 .block-container {
-    padding: 0 0 60px 0 !important;
+    padding: 0 0 90px 0 !important;
     max-width: 100% !important;
 }
 
@@ -199,8 +204,25 @@ hr {
 </style>
 """, unsafe_allow_html=True)
 
+# ── Load Model ────────────────────────────────────────────────────────────────
+@st.cache_resource
+def load_model():
+    """Load XGBoost model, scaler and feature columns."""
+    BASE     = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    MODELS   = os.path.join(BASE, "models")
+    try:
+        model        = joblib.load(os.path.join(MODELS, "xgboost_model.pkl"))
+        feature_cols = joblib.load(os.path.join(MODELS, "feature_columns.pkl"))
+        explainer    = shap.TreeExplainer(model)
+        return model, feature_cols, explainer, True
+    except Exception as e:
+        return None, None, None, False
+
+model, feature_cols, explainer, model_loaded = load_model()
+
 # ── Header ────────────────────────────────────────────────────────────────────
-st.markdown("""
+mode_badge = "🤖 XGBoost Model" if model_loaded else "📋 Rule-Based Scoring"
+st.markdown(f"""
 <div style="background:linear-gradient(135deg,#040d14,#061428,#0a1f38);
             border-bottom:1px solid #1a3050;
             padding:1.2rem 3rem;
@@ -214,6 +236,11 @@ st.markdown("""
                     letter-spacing:0.15em; border-left:1px solid #1a3050;
                     padding-left:1.5rem;">
             Patient Readmission Risk Predictor
+        </div>
+        <div style="font-size:0.72rem; background:rgba(0,229,255,0.1);
+                    border:1px solid rgba(0,229,255,0.3); color:#00e5ff;
+                    padding:0.25rem 0.8rem; border-radius:20px;">
+            {mode_badge}
         </div>
     </div>
     <div style="display:flex; gap:3rem;">
@@ -300,24 +327,127 @@ with col_result:
             st.warning("⚠️ Please fill in all dropdown fields before predicting.")
 
         else:
-            score = 0
-            if age >= 65:                                               score += 2
-            if age >= 80:                                               score += 2
-            if diagnosis in ["Heart Failure","COPD",
-                             "Chronic Kidney Disease"]:                 score += 3
-            if diagnosis == "Type 2 Diabetes" and hba1c > 9:           score += 2
-            if length_of_stay <= 2:                                     score += 2
-            if num_medications >= 8:                                    score += 1
-            if discharge_type == "Home":                                score += 2
-            if discharge_type == "Against Medical Advice":              score += 4
-            if num_prev_admissions >= 2:                                score += 2
-            if num_prev_admissions >= 4:                                score += 2
-            if insurance_type == "None (Self-pay)":                     score += 1
+            # ── Feature Engineering (mirror Notebook 02) ──────────────────
+            HIGH_RISK_DIAG     = ["Chronic Kidney Disease", "COPD", "Heart Failure"]
+            discharge_map      = {"Home":0,"Home with Follow-up":1,
+                                  "Long-term Care Facility":2,
+                                  "Referred to Another Hospital":3,
+                                  "Against Medical Advice":4}
+            insurance_map      = {"Ayushman Bharat":0,"State Government Scheme":1,
+                                  "ESIC":2,"Private Insurance":3,"None (Self-pay)":4}
 
-            prob     = round(min(0.08 + score * 0.055, 0.93), 2)
-            prob_pct = int(prob * 100)
-            is_high  = prob >= 0.6
-            is_medium= 0.3 <= prob < 0.6
+            # Build feature dict
+            patient_features = {
+                "age"                     : age,
+                "length_of_stay_days"     : length_of_stay,
+                "num_previous_admissions" : num_prev_admissions,
+                "num_medications"         : num_medications,
+                "hba1c"                   : hba1c,
+                "blood_glucose_mg_dl"     : 120,   # default
+                "systolic_bp_mmhg"        : 130,   # default
+                "creatinine_mg_dl"        : 1.0,   # default
+                "haemoglobin_g_dl"        : 12.0,  # default
+                "total_charges_inr"       : length_of_stay * 4000,
+                "cost_per_day"            : length_of_stay * 4000 / (length_of_stay + 1),
+                "risk_score"              : 0,
+                "is_senior"               : int(age >= 65),
+                "is_very_elderly"         : int(age >= 80),
+                "age_group"               : (0 if age < 35 else 1 if age < 50
+                                             else 2 if age < 65 else 3 if age < 80 else 4),
+                "is_short_stay"           : int(length_of_stay <= 2),
+                "is_long_stay"            : int(length_of_stay > 10),
+                "stay_bucket"             : (0 if length_of_stay <= 2 else
+                                             1 if length_of_stay <= 5 else
+                                             2 if length_of_stay <= 10 else
+                                             3 if length_of_stay <= 20 else 4),
+                "is_repeat_patient"       : int(num_prev_admissions >= 2),
+                "is_frequent_patient"     : int(num_prev_admissions >= 4),
+                "is_high_medications"     : int(num_medications >= 8),
+                "is_polypharmacy"         : int(num_medications >= 10),
+                "no_followup"             : int(discharge_type == "Home"),
+                "ama_discharge"           : int(discharge_type == "Against Medical Advice"),
+                "has_followup"            : int(discharge_type == "Home with Follow-up"),
+                "no_insurance"            : int(insurance_type == "None (Self-pay)"),
+                "govt_insurance"          : int(insurance_type in ["Ayushman Bharat",
+                                              "State Government Scheme","ESIC"]),
+                "poor_diabetes_control"   : int(diagnosis == "Type 2 Diabetes" and hba1c > 9),
+                "high_hba1c"              : int(hba1c > 9),
+                "high_glucose"            : 0,
+                "high_bp"                 : 0,
+                "high_creatinine"         : 0,
+                "low_haemoglobin"         : 0,
+                "is_high_risk_diag"       : int(diagnosis in HIGH_RISK_DIAG),
+                "gender_encoded"          : 1,
+                "discharge_encoded"       : discharge_map.get(discharge_type, 0),
+                "insurance_encoded"       : insurance_map.get(insurance_type, 0),
+            }
+
+            # Add diagnosis one-hot
+            all_diag = ["Type 2 Diabetes","Hypertension","Coronary Artery Disease",
+                        "Chronic Kidney Disease","Pneumonia","COPD","Asthma",
+                        "Tuberculosis","Anaemia","Dengue Fever","Typhoid",
+                        "Liver Cirrhosis","Heart Failure","Stroke","Malaria"]
+            for d in all_diag:
+                key = f"diag_{d.replace(' ','_')}"
+                patient_features[key] = int(diagnosis == d)
+
+            # Add state one-hot (default 0)
+            all_states = ["Rajasthan","Maharashtra","Uttar Pradesh","Tamil Nadu",
+                          "Karnataka","Gujarat","West Bengal","Madhya Pradesh",
+                          "Bihar","Delhi","Kerala","Punjab","Haryana","Odisha"]
+            for s in all_states:
+                patient_features[f"state_{s.replace(' ','_')}"] = 0
+
+            # Compute risk score
+            patient_features["risk_score"] = (
+                patient_features["is_senior"]           * 2 +
+                patient_features["is_very_elderly"]     * 2 +
+                patient_features["is_short_stay"]       * 2 +
+                patient_features["is_repeat_patient"]   * 2 +
+                patient_features["is_frequent_patient"] * 2 +
+                patient_features["is_high_risk_diag"]   * 3 +
+                patient_features["poor_diabetes_control"] * 2 +
+                patient_features["is_high_medications"] * 1 +
+                patient_features["no_followup"]         * 2 +
+                patient_features["ama_discharge"]       * 4 +
+                patient_features["no_insurance"]        * 1
+            )
+
+            # ── Predict ───────────────────────────────────────────────────
+            if model_loaded and feature_cols:
+                X_input = pd.DataFrame([patient_features])
+                # Align columns with training features
+                for col in feature_cols:
+                    if col not in X_input.columns:
+                        X_input[col] = 0
+                X_input  = X_input[feature_cols]
+                prob     = float(model.predict_proba(X_input)[0][1])
+
+                # SHAP explanation
+                shap_vals = explainer.shap_values(X_input)
+                shap_series = pd.Series(shap_vals[0], index=feature_cols)
+                top_shap = shap_series.abs().nlargest(5).index.tolist()
+
+            else:
+                # Fallback rule-based scoring
+                score = 0
+                if age >= 65:                                     score += 2
+                if age >= 80:                                     score += 2
+                if diagnosis in HIGH_RISK_DIAG:                   score += 3
+                if diagnosis == "Type 2 Diabetes" and hba1c > 9:  score += 2
+                if length_of_stay <= 2:                           score += 2
+                if num_medications >= 8:                          score += 1
+                if discharge_type == "Home":                      score += 2
+                if discharge_type == "Against Medical Advice":    score += 4
+                if num_prev_admissions >= 2:                      score += 2
+                if num_prev_admissions >= 4:                      score += 2
+                if insurance_type == "None (Self-pay)":           score += 1
+                prob     = round(min(0.08 + score * 0.055, 0.93), 2)
+                top_shap = []
+
+            prob_pct  = int(prob * 100)
+            is_high   = prob >= 0.6
+            is_medium = 0.3 <= prob < 0.6
 
             if is_high:
                 risk_label = "🔴 HIGH RISK"
@@ -332,10 +462,10 @@ with col_result:
                 rec_title  = "🟢 Standard Discharge"
                 rec_text   = "Routine discharge. Schedule follow-up in 30 days. Patient is stable."
 
+            # ── Risk factors ─────────────────────────────────────────────
             risks = []
             if age >= 65:                risks.append(f"Elderly patient — age {age}")
-            if diagnosis in ["Heart Failure","COPD","Chronic Kidney Disease"]:
-                                         risks.append(f"High-risk diagnosis: {diagnosis}")
+            if diagnosis in HIGH_RISK_DIAG: risks.append(f"High-risk diagnosis: {diagnosis}")
             if diagnosis == "Type 2 Diabetes" and hba1c > 9:
                                          risks.append(f"Poor diabetes control — HbA1c {hba1c}")
             if length_of_stay <= 2:      risks.append("Very short hospital stay (≤ 2 days)")
@@ -347,12 +477,14 @@ with col_result:
             if insurance_type == "None (Self-pay)":
                                          risks.append("No insurance coverage")
 
+            # ── Display results ───────────────────────────────────────────
             left, right = st.columns(2, gap="small")
 
             with left:
                 st.markdown("### 📊 Risk Summary")
                 st.metric("Probability", f"{prob_pct}%")
-                st.metric("Prediction", "⚠️ Will Readmit" if prob >= 0.45 else "✅ Will Not Readmit")
+                st.metric("Prediction",
+                          "⚠️ Will Readmit" if prob >= 0.45 else "✅ Will Not Readmit")
                 st.metric("Risk Level", risk_label)
                 st.progress(prob)
                 st.markdown(
@@ -361,6 +493,10 @@ with col_result:
                     "<span>Low</span><span>High</span></div>",
                     unsafe_allow_html=True
                 )
+                if model_loaded:
+                    st.caption("🤖 Powered by XGBoost (AUC: ~0.91)")
+                else:
+                    st.caption("📋 Rule-based scoring (model not found)")
 
             with right:
                 st.markdown("### ⚡ Risk Factors")
@@ -369,6 +505,14 @@ with col_result:
                         st.warning(f"⚠️ {r}")
                 else:
                     st.success("✅ No major risk factors.")
+
+                # Show top SHAP features if model loaded
+                if model_loaded and top_shap:
+                    st.markdown("**🧠 Top SHAP Features:**")
+                    for feat in top_shap[:3]:
+                        val = float(shap_vals[0][feature_cols.index(feat)])
+                        direction = "↑ increases risk" if val > 0 else "↓ reduces risk"
+                        st.caption(f"• `{feat}` — {direction}")
 
             st.markdown("---")
             if is_high:
@@ -390,8 +534,7 @@ st.markdown("""
     </div>
     <a href="https://github.com/phantom074" target="_blank"
        style="font-size:0.85rem; color:#6b8fa8; letter-spacing:0.1em;
-              text-transform:uppercase; text-decoration:none;
-              transition: color 0.2s;">
+              text-transform:uppercase; text-decoration:none;">
         github.com/phantom074 ↗
     </a>
 </div>

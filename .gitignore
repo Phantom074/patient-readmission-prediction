@@ -18,3 +18,4 @@ dist/
 build/
 *.egg-info/
 .streamlit/secrets.toml
+.ipynb_checkpoints/

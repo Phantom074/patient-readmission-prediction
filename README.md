@@ -10,10 +10,13 @@
 ![PowerBI](https://img.shields.io/badge/Power_BI-Dashboard-F2C811?style=for-the-badge&logo=powerbi&logoColor=black)
 ![Kaggle](https://img.shields.io/badge/Dataset-Kaggle-20BEFF?style=for-the-badge&logo=kaggle&logoColor=white)
 
-![Status](https://img.shields.io/badge/Status-In%20Progress-yellow?style=flat-square)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen?style=flat-square)
 ![Records](https://img.shields.io/badge/Patients-10%2C000-blue?style=flat-square)
 ![States](https://img.shields.io/badge/Indian%20States-14-orange?style=flat-square)
 ![Readmission](https://img.shields.io/badge/Readmission%20Rate-32%25-red?style=flat-square)
+![Live](https://img.shields.io/badge/Live%20Demo-med--risk.streamlit.app-FF4B4B?style=flat-square&logo=streamlit)
+
+### 🚀 [**Try the Live App → med-risk.streamlit.app**](https://med-risk.streamlit.app)
 
 </div>
 
@@ -93,7 +96,7 @@ patient-readmission-prediction/
 │   ├── scaler.pkl                    # Feature scaler ✅
 │   └── feature_columns.pkl           # Feature column list ✅
 │
-├── 📂 dashboard/                     # Power BI dashboard (.pbix)
+├── 📂 Dashboard/                     # Power BI dashboard (.pbix) ✅
 ├── 📂 reports/                       # EDA charts & model reports ✅
 ├── 📂 data_generation/
 │   └── generate_indian_patient_data.py
@@ -118,6 +121,7 @@ patient-readmission-prediction/
 | 📅 Date Range | 2020 – 2024 |
 | 🎯 Target Variable | readmitted_30_days |
 | ⚖️ Class Distribution | 68% No · 32% Yes |
+| ⭐ Kaggle Usability | 9.4 / 10 |
 
 </div>
 
@@ -137,7 +141,7 @@ patient-readmission-prediction/
 | Visualization | Matplotlib · Seaborn · Plotly |
 | Machine Learning | Scikit-learn · XGBoost · SMOTE |
 | Explainability | SHAP |
-| Web App | Streamlit |
+| Web App | Streamlit (deployed on Streamlit Cloud) |
 | Dashboard | Power BI |
 | Version Control | Git · GitHub |
 
@@ -183,7 +187,9 @@ features = {
 
 ---
 
-## 🌐 Streamlit App
+## 🌐 Live Streamlit App
+
+> **🚀 [med-risk.streamlit.app](https://med-risk.streamlit.app)**
 
 A live clinical decision support web app powered by **XGBoost (AUC ~0.91)** where doctors can enter patient details and instantly get:
 
@@ -193,6 +199,7 @@ A live clinical decision support web app powered by **XGBoost (AUC ~0.91)** wher
 - Top SHAP features explaining the individual prediction
 - Clinical recommendation for the care team
 
+**To run locally:**
 ```bash
 streamlit run app/streamlit_app.py
 # Access at: http://localhost:8501
@@ -219,7 +226,7 @@ Clinical Feature Engineering (23 new features)
                  ↓
        SHAP Explainability
                  ↓
-        Streamlit Deployment
+     Streamlit Cloud Deployment ✅
 ```
 
 | Model | Accuracy | AUC-ROC | F1 |
@@ -261,7 +268,7 @@ psql -d readmission_db -f sql/schema.sql
 ## 🗺️ Roadmap
 
 - [x] Synthetic Indian patient dataset (10,000 records)
-- [x] Dataset published on Kaggle
+- [x] Dataset published on Kaggle (Usability 9.4 ⭐)
 - [x] Data generation script
 - [x] Project structure & documentation
 - [x] EDA notebooks with full visualizations
@@ -269,8 +276,8 @@ psql -d readmission_db -f sql/schema.sql
 - [x] XGBoost model training & evaluation (AUC ~0.91)
 - [x] SHAP explainability charts
 - [x] Streamlit app connected to XGBoost model
-- [ ] Power BI dashboard
-- [ ] Deploy on Streamlit Cloud
+- [x] Power BI dashboard
+- [x] Deploy on Streamlit Cloud → [med-risk.streamlit.app](https://med-risk.streamlit.app)
 
 ---
 
@@ -278,9 +285,10 @@ psql -d readmission_db -f sql/schema.sql
 
 <div align="center">
 
-**Mukul**
+**Mukul Dhattarwal**
 Data Science Enthusiast
 
+[![Live App](https://img.shields.io/badge/🚀%20Live%20App-med--risk.streamlit.app-FF4B4B?style=flat-square)](https://med-risk.streamlit.app)
 [![GitHub](https://img.shields.io/badge/GitHub-phantom074-181717?style=flat-square&logo=github)](https://github.com/phantom074)
 [![Kaggle](https://img.shields.io/badge/Kaggle-mukuldhattarwal-20BEFF?style=flat-square&logo=kaggle)](https://www.kaggle.com/mukuldhattarwal)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Mukul-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/mukuldhattarwal)

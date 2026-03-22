@@ -208,14 +208,19 @@ hr {
 @st.cache_resource
 def load_model():
     """Load XGBoost model, scaler and feature columns."""
-    BASE     = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    MODELS   = os.path.join(BASE, "models")
+    # Try __file__-relative path first (local), then cwd (Streamlit Cloud)
+    BASE   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    MODELS = os.path.join(BASE, "models")
+    if not os.path.exists(MODELS):
+        MODELS = os.path.join(os.getcwd(), "models")
+
     try:
         model        = joblib.load(os.path.join(MODELS, "xgboost_model.pkl"))
         feature_cols = joblib.load(os.path.join(MODELS, "feature_columns.pkl"))
         explainer    = shap.TreeExplainer(model)
         return model, feature_cols, explainer, True
     except Exception as e:
+        st.error(f"Model load error: {e} | Path tried: {MODELS}")
         return None, None, None, False
 
 model, feature_cols, explainer, model_loaded = load_model()

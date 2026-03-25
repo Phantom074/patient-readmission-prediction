@@ -241,7 +241,7 @@ Clinical Feature Engineering (23 new features)
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/phantom074/patient-readmission-prediction.git
+git clone https://github.com/mukuldhattarwal/patient-readmission-prediction.git
 cd patient-readmission-prediction
 
 # 2. Install dependencies
@@ -289,7 +289,7 @@ psql -d readmission_db -f sql/schema.sql
 Data Science Enthusiast
 
 [![Live App](https://img.shields.io/badge/🚀%20Live%20App-med--risk.streamlit.app-FF4B4B?style=flat-square)](https://med-risk.streamlit.app)
-[![GitHub](https://img.shields.io/badge/GitHub-phantom074-181717?style=flat-square&logo=github)](https://github.com/phantom074)
+[![GitHub](https://img.shields.io/badge/GitHub-mukuldhattarwal-181717?style=flat-square&logo=github)](https://github.com/mukuldhattarwal)
 [![Kaggle](https://img.shields.io/badge/Kaggle-mukuldhattarwal-20BEFF?style=flat-square&logo=kaggle)](https://www.kaggle.com/mukuldhattarwal)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Mukul-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/mukuldhattarwal)
 
